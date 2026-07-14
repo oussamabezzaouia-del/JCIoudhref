@@ -30,14 +30,20 @@
     return sessionStorage.getItem('jciAdminToken') || '';
   }
 
-  function adminHeaders(json) {
-    const h = { 'X-Admin-Token': getAdminToken() };
+function adminHeaders(json, token) {
+    const h = { 'X-Admin-Token': token != null ? String(token) : getAdminToken() };
     if (json) h['Content-Type'] = 'application/json';
     return h;
-  }
+}
 
-  /** Événements agenda (public / admin lecture) */
-  async function getAgendaEvents() {
+async function checkAdminToken(token) {
+    if (!token) return false;
+    if (!(await checkApi())) return true;
+    const r = await fetch('/api/admin/check', {
+      method: 'GET',
+      headers: adminHeaders(false, token)
+    });
+    return r.ok;
     if (await checkApi()) {
       const r = await fetch('/api/events');
       if (!r.ok) throw new Error('Impossible de charger l\'agenda.');
@@ -450,6 +456,7 @@
 
   global.JciData = {
     checkApi,
+    checkAdminToken,
     getAdminToken,
     setAdminToken: (t) => sessionStorage.setItem('jciAdminToken', t),
     clearAdminToken: () => sessionStorage.removeItem('jciAdminToken'),

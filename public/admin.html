@@ -752,17 +752,28 @@
                 loginError.hidden = false;
                 return;
             }
-            loginError.hidden = true;
-            JciData.setAdminToken(val);
-            loginSection.hidden = true;
-            adminPanel.hidden = false;
-            await updateModeUi();
-            await renderEvents();
-            await populateGalleryEventsSelect();
-            await renderGalleryAdmin();
-            await renderSiteAdmin();
+            try {
+                const server = await JciData.usesServer();
+                if (server) {
+                    const valid = await JciData.checkAdminToken(val);
+                    if (!valid) {
+                        loginError.hidden = false;
+                        return;
+                    }
+                }
+                loginError.hidden = true;
+                JciData.setAdminToken(val);
+                loginSection.hidden = true;
+                adminPanel.hidden = false;
+                await updateModeUi();
+                await renderEvents();
+                await populateGalleryEventsSelect();
+                await renderGalleryAdmin();
+                await renderSiteAdmin();
+            } catch (e) {
+                loginError.hidden = false;
+            }
         });
-
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const date = dateInput.value;

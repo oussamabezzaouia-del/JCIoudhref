@@ -220,6 +220,10 @@ app.delete('/api/partners/:id', requireAdmin, (req, res) => {
   res.json({ ok: true });
 });
 
+app.get('/api/admin/check', requireAdmin, (req, res) => {
+  res.json({ ok: true });
+});
+
 // Serve static files from the public directory
 app.use(express.static(path.join(rootDir, 'public')));
 
