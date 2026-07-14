@@ -39,22 +39,15 @@ function adminHeaders(json, token) {
 async function checkAdminToken(token) {
     if (!token) return false;
     if (!(await checkApi())) return true;
-    const r = await fetch('/api/admin/check', {
-      method: 'GET',
-      headers: adminHeaders(false, token)
-    });
-    return r.ok;
-    if (await checkApi()) {
-      const r = await fetch('/api/events');
-      if (!r.ok) throw new Error('Impossible de charger l\'agenda.');
-      return await r.json();
-    }
-    const raw = localStorage.getItem(LS.agendaPublished);
-    if (!raw) return [];
     try {
-      return JSON.parse(raw);
+      const r = await fetch('/api/admin/check', {
+        method: 'GET',
+        headers: adminHeaders(false, token),
+        cache: 'no-store'
+      });
+      return r.ok;
     } catch {
-      return [];
+      return false;
     }
   }
 
