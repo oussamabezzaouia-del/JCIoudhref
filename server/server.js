@@ -6,6 +6,9 @@ const db = require('./db');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'jci2026';
+if (!process.env.ADMIN_TOKEN) {
+  console.warn('WARNING: ADMIN_TOKEN is not defined. The admin API will accept the default token jci2026.');
+}
 
 const rootDir = path.join(__dirname, '..');
 const upload = multer({

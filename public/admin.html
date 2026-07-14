@@ -304,6 +304,7 @@
                 modeServer: 'Mode serveur : les ajouts et suppressions sont enregistrés dans la base SQLite.',
                 deleteButton: 'Supprimer',
                 galleryPhotoCountOne: '1 photo',
+                loginServerError: 'Serveur inaccessible ou token admin non configuré.',
                 galleryPhotoCountMany: '{n} photos',
                 sessionExpired: 'Session expirée. Reconnectez-vous.',
                 sessionExpiredShort: 'Session expirée.',
@@ -749,17 +750,22 @@
         loginButton.addEventListener('click', async () => {
             const val = String(passwordInput.value || '').trim();
             if (val === '') {
+                loginError.textContent = t('loginError');
                 loginError.hidden = false;
                 return;
             }
             try {
                 const server = await JciData.usesServer();
-                if (server) {
-                    const valid = await JciData.checkAdminToken(val);
-                    if (!valid) {
-                        loginError.hidden = false;
-                        return;
-                    }
+                if (!server) {
+                    loginError.textContent = t('loginServerError');
+                    loginError.hidden = false;
+                    return;
+                }
+                const valid = await JciData.checkAdminToken(val);
+                if (!valid) {
+                    loginError.textContent = t('loginError');
+                    loginError.hidden = false;
+                    return;
                 }
                 loginError.hidden = true;
                 JciData.setAdminToken(val);
@@ -771,6 +777,7 @@
                 await renderGalleryAdmin();
                 await renderSiteAdmin();
             } catch (e) {
+                loginError.textContent = t('loginError');
                 loginError.hidden = false;
             }
         });
