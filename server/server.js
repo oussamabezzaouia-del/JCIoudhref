@@ -235,5 +235,6 @@ app.get(/^(?!\/api).*/, (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`JCI Oudhref server running on port ${PORT}`);
-  console.log(`API health check: https://jci-website-production.up.railway.app/:${PORT}/api/health`);
+  console.log(`Static files served from: ${path.join(rootDir, 'public')}`);
+  console.log(`Ready to receive requests`);
 });
