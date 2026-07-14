@@ -51,6 +51,21 @@ async function checkAdminToken(token) {
     }
   }
 
+  async function getAgendaEvents() {
+    if (await checkApi()) {
+      const r = await fetch('/api/events');
+      if (!r.ok) throw new Error('Impossible de charger l\'agenda.');
+      return await r.json();
+    }
+    const raw = localStorage.getItem(LS.agendaPublished);
+    if (!raw) return [];
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return [];
+    }
+  }
+
   /** Brouillon admin agenda (localStorage uniquement) */
   function loadDraftEvents() {
     const raw = localStorage.getItem(LS.agendaDraft);
