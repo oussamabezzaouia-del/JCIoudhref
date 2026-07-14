@@ -182,7 +182,7 @@
 
     <script src="js/jci-data.js"></script>
     <script>
-        const ADMIN_PASSWORD = 'olm_oudhref2026';
+
 
         const loginSection = document.getElementById('login-section');
         const loginBox = document.getElementById('login-box');
@@ -747,8 +747,8 @@
         }
 
         loginButton.addEventListener('click', async () => {
-            const val = passwordInput.value;
-            if (val !== ADMIN_PASSWORD) {
+            const val = String(passwordInput.value || '').trim();
+            if (val === '') {
                 loginError.hidden = false;
                 return;
             }
